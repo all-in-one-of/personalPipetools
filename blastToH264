@@ -1,0 +1,24 @@
+#!/usr/bin/python
+import os
+import sys
+import commands
+
+def blast(args):
+    if (len(args) == 0):
+        print "blastToH264 \"file.mov [file.mov [file.mov\"]]"
+        return
+
+    print args
+    for files in args:
+        if (not os.path.exists(files)):
+            print (files + " does not exist, continuing")
+            continue
+        
+        extension = files.split(".")[-1]
+        newFile = files.replace("." + extension, "_H264." + extension)
+        os.system("ffmpeg -i " + files + " -vcodec libx264 " + newFile)
+        
+
+if (__name__ == "__main__"):
+    blast(sys.argv[1:])
+

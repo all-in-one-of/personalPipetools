@@ -1,0 +1,48 @@
+#!/usr/bin/python
+import os
+import sys
+import commands
+import numpy as np
+
+def shred(args, iterations = 16):
+    print args
+    filepath = args
+    
+    print filepath
+    
+    if (len(filepath) == 0):
+        print "fileshredder \"file.ext,[file.ext,[file.ext\"]]"
+        return
+    
+    for each in filepath:
+        if (not os.path.exists(each)):
+            print ("You must give a valid file path " + each +
+                   " is not a valid file.")
+            return
+        
+        go = raw_input("Are you sure you want to delete "
+                       + each + "? y/n  ")
+        if (go == "y" or go == "yes"):
+            tfile = open(each,"rb").read()
+            tlen = len(tfile)
+            cycle = 0
+
+            for i in range(0,iterations):
+                mymod = cycle%2
+                if (mymod == 0):
+                    npshred = np.zeros((1,tlen),np.int)
+                else:
+                    npshred = np.ones((1,tlen),np.int)
+                outfile = open(each,"wb")
+                outfile.write(npshred)
+                outfile.close()
+                cycle += 1
+            
+            os.remove(each)
+        else:
+            print "Continuing to next file!!!"
+
+if (__name__ == "__main__"):
+    shred(sys.argv[1:])
+
+
