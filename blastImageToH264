@@ -1,0 +1,28 @@
+#!/usr/bin/python
+import os
+import sys
+import commands
+
+def blast(args):
+    if (len(args) == 0):
+        print "blastImageToH264 \"imageName.####.jpg"
+	print "#### = the first frame of the sequence"
+        return
+
+    print args
+    for files in args:
+        if (not os.path.exists(files)):
+            print (files + " does not exist, continuing")
+            continue
+        
+        extension = files.split(".")[-1]
+	frameStr = files.split(".")[-2]
+	name = files.split(".")[0]
+	padLen = len(frameStr)
+	imageStr = name + ".%" + str(padLen) + "d." + extension
+	startFrame = int(frameStr)
+        newFile = name + ".mov"
+        os.system("ffmpeg -f image2 -start_number " + str(startFrame) + " -i " + imageStr + " -vcodec libx264 " + newFile)
+
+if (__name__ == "__main__"):
+   blast(sys.argv[1:])

@@ -1,0 +1,51 @@
+#!/usr/bin/python
+import os
+import sys
+import commands
+
+def padNumToString(iInt):
+    result = str(iInt)
+    if (iInt < 10):
+        result = "000" + str(iInt)
+    elif (iInt > 9 and iInt < 100):
+        result = "00" + str(iInt)
+    elif (iInt > 99 and iInt < 1000):
+        result = "0" + str(iInt)
+    return result
+        
+
+def version():
+    dirs = commands.getoutput("ls | grep -v saveit").split("\n")
+    numList = list()
+    for d in dirs:
+        try:
+            tmp = int(d)
+            numList.append(tmp)
+        except:
+            pass
+        
+    numList.sort()
+    if (len(numList) == 0):
+        print "Not in a valid versioning dir"
+        return
+
+    if (not os.path.isdir("./saveit")):
+        os.makedirs("./saveit")
+
+    leastVer = numList[0]
+    hiestVer = numList[-1]
+    newVer = hiestVer + 1
+    #pad values
+    leastVer = padNumToString(leastVer)
+    hiestVer = padNumToString(hiestVer)
+    newVer = padNumToString(newVer)
+
+    #tar the lowest version and move to saveit dir
+    os.system("tar -czvf ./saveit/" + leastVer + ".tar.gz " + leastVer)
+    os.system("rm -rf " + leastVer)
+    os.system("cp -r " + hiestVer + " " + newVer)
+
+
+if (__name__ == "__main__"):
+    version()
+
